@@ -11,7 +11,7 @@ import os
 matplotlib.use('agg')
 
 app = Flask(__name__)
-beras_model = load_model('beras_model.h5')
+model = load_model('model.h5')
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -40,7 +40,7 @@ def index():
         input_data = x_valid[:30][np.newaxis]
         future_forecast = []
         for _ in range(future_days):
-            prediction = beras_model.predict(input_data)
+            prediction = model.predict(input_data)
             future_forecast.append(prediction[0, 0])
             input_data = np.append(input_data[:, 1:, :], [
                                    [prediction[0, 0]]], axis=1)
