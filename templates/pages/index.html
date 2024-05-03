@@ -10,8 +10,9 @@
                 <div class="card-title">
                     <h1 class="text-center">Prediksi Harga Beras</h1>
                 </div>
-                <form action="/" class="mt-4 d-flex justify-content-center align-items-center flex-column" method="POST"
-                    enctype="multipart/form-data">
+                <form class="mt-4 d-flex justify-content-center align-items-center flex-column"
+                    enctype="multipart/form-data" hx-post="/" hx-trigger="submit" hx-swap="outerHTML"
+                    hx-target="#result" hx-indicator="#progress">
                     <div class="form-group text-center">
                         <label for="file" class="font-weight-bold">Masukkan Data Harga Beras</label>
                         <input type="file" class="form-control" id="file" name="data" accept=".csv">
@@ -24,7 +25,11 @@
                 </form>
             </div>
         </div>
+        <p id="progress" class="htmx-indicator spinner"></p>
+        <div id="result"></div>
     </div>
+
+    {% include "includes/script.html" %}
 </body>
 
 </html>
