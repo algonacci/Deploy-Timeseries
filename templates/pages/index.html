@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+{% include "includes/head.html" %}
+
+<body>
+    {% include "components/navbar.html" %}
+    <div class="container">
+        <div class="card mt-5 mx-auto" style="max-width: 400px;">
+            <div class="card-body">
+                <div class="card-title">
+                    <h1 class="text-center">Prediksi Harga Beras</h1>
+                </div>
+                <form action="/" class="mt-4 d-flex justify-content-center align-items-center flex-column" method="POST"
+                    enctype="multipart/form-data">
+                    <div class="form-group text-center">
+                        <label for="file" class="font-weight-bold">Masukkan Data Harga Beras</label>
+                        <input type="file" class="form-control" id="file" name="data" accept=".csv">
+                        <br>
+                        <label for="fuure_days">Jumlah Hari Prediksi</label>
+                        <input type="number" placeholder="Masukkan jumlah hari prediksi" class="form-control"
+                            name="future_days">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Prediksi</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
