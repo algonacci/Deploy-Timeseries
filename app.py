@@ -63,9 +63,10 @@ def index():
         image_path = f"static/{now}.png"
         plt.savefig(image_path)
 
-        # Save prediction data to history.txt
         with open("history.txt", "a") as file:
-            file.write(f"{datetime.datetime.now()}, \
+            timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            file.write(f"{timestamp}, \
                        {future_days}, \
                        {forecast_original[-1][0]}, {image_path}\n")
 
@@ -79,7 +80,6 @@ def index():
 
 @app.route("/history")
 def history():
-    # Read content from history.txt and parse it
     history_data = []
     with open("history.txt", "r") as file:
         for line in file:
@@ -91,9 +91,8 @@ def history():
                 "image_path": image_path
             })
 
-    # Pass history data to history.html for rendering
     return render_template("pages/history.html", history=history_data)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=8080)

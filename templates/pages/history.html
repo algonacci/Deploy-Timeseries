@@ -1,19 +1,33 @@
-<div class="container">
-    <h1>Prediction History</h1>
-    <table border="1">
-        <tr>
-            <th>Timestamp</th>
-            <th>Future Days</th>
-            <th>Forecast</th>
-            <th>Image</th>
-        </tr>
-        {% for entry in history %}
-        <tr>
-            <td>{{ entry.timestamp }}</td>
-            <td>{{ entry.future_days }}</td>
-            <td>{{ entry.forecast }}</td>
-            <td><img src="{{ entry.image_path }}" width="100"></td>
-        </tr>
-        {% endfor %}
+<div class="container" id="content">
+    <div class="text-center py-3">
+        <h1>Riwayat Prediksi</h1>
+    </div>
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Future Days</th>
+                <th>Forecast</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in history %}
+            <tr>
+                <td>{{ entry.timestamp }}</td>
+                <td>{{ entry.future_days }}</td>
+                <td>{{ entry.forecast }}</td>
+                <td>
+                    <img src="{{ entry.image_path }}" width="100">
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+    </script>
 </div>
