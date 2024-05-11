@@ -17,9 +17,15 @@ model = load_model('model.h5')
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        future_days = int(request.form["future_days"])
-        data = request.files["data"]
-        df = pd.read_csv(data, delimiter=";")
+        start_date = datetime.datetime.strptime(
+            request.form['start_date'], '%Y-%m-%d')
+        end_date = datetime.datetime.strptime(
+            request.form['end_date'], '%Y-%m-%d')
+
+        # Hitung perbedaan jumlah hari
+        delta = end_date - start_date
+        future_days = delta.days
+        df = pd.read_csv("data_TA.csv", delimiter=";")
         df['Tanggal'] = df['Tanggal'].str.replace(' ', '')
         df['Tanggal'] = df['Tanggal'].str.replace('/', '-')
         df.interpolate(method='linear', inplace=True)

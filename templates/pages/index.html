@@ -14,12 +14,14 @@
                     enctype="multipart/form-data" hx-post="/" hx-trigger="submit" hx-swap="outerHTML"
                     hx-target="#result" hx-indicator="#progress">
                     <div class="form-group text-center">
-                        <label for="file" class="font-weight-bold">Masukkan Data Suhu Udara</label>
-                        <input type="file" class="form-control" id="file" name="data" accept=".csv">
                         <br>
-                        <label for="fuure_days">Jumlah Hari Prediksi</label>
-                        <input type="number" placeholder="Masukkan jumlah hari prediksi" class="form-control"
-                            name="future_days">
+                        <label for="start_date">Tanggal Awal</label>
+                        <input type="date" class="form-control" name="start_date">
+                    </div>
+                    <div class="form-group text-center">
+                        <br>
+                        <label for="end_date">Tanggal Akhir</label>
+                        <input type="date" class="form-control" name="end_date">
                     </div>
                     <button type="submit" class="btn btn-primary mt-3">Prediksi</button>
                 </form>
