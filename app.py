@@ -51,19 +51,23 @@ def index():
             input_data = np.append(input_data[:, 1:, :], [
                                    [prediction[0, 0]]], axis=1)
         future_forecast = np.array(future_forecast)
-        x_train_original = scaler.inverse_transform(x_train)
-        x_valid_original = scaler.inverse_transform(x_valid)
         forecast_original = scaler.inverse_transform(future_forecast)
-        plt.figure(figsize=(10, 6))
-        plt.plot(time_train, x_train_original, label='Actual')
-        plt.plot(time_valid, x_valid_original, label='Test')
         future_dates = pd.date_range(
             start=time_valid[-1], periods=future_days+1)[1:]
+
+        # Plot hanya data prediksi
+        plt.figure(figsize=(10, 6))
         plt.plot(future_dates, forecast_original,
                  label='Forecast', linestyle='dashed')
+        plt.scatter(future_dates, forecast_original, color='red')
+
+        for i, txt in enumerate(forecast_original):
+            plt.annotate(f'{txt[0]:.2f}', (future_dates[i], forecast_original[i]),
+                         textcoords="offset points", xytext=(0, 5), ha='center')
+
         plt.xlabel('Date')
         plt.ylabel('Price')
-        plt.title('Actual vs Forecast')
+        plt.title('Forecast')
         plt.legend()
         now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         image_path = f"static/{now}.png"
