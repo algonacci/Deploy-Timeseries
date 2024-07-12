@@ -31,8 +31,8 @@ def index():
         df.interpolate(method='linear', inplace=True)
         df['Tx'].fillna(method='bfill', inplace=True)
         tanggal = pd.to_datetime(df['Tanggal'], format="%d-%m-%Y")
-        price = df['Tx'].astype(float)
-        series = np.array(price)
+        temperature = df['Tx'].astype(float)
+        series = np.array(temperature)
         scaler = MinMaxScaler(feature_range=(0, 1))
         series = scaler.fit_transform(series.reshape(-1, 1))
         time = np.array(tanggal)
@@ -56,7 +56,7 @@ def index():
             start=time_valid[-1], periods=future_days+1)[1:]
 
         # Plot hanya data prediksi
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(15, 10))
         plt.plot(future_dates, forecast_original,
                  label='Forecast', linestyle='dashed')
         plt.scatter(future_dates, forecast_original, color='red')
@@ -66,7 +66,8 @@ def index():
                          textcoords="offset points", xytext=(0, 5), ha='center')
 
         plt.xlabel('Date')
-        plt.ylabel('Price')
+        plt.ylabel('Temperature')
+        plt.xticks(rotation=45)  # Rotate x-axis labels
         plt.title('Forecast')
         plt.legend()
         now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
