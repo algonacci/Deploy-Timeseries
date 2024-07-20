@@ -5,6 +5,7 @@ from tensorflow.keras.models import load_model
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
+import matplotlib.dates as mdates
 import matplotlib
 import os
 
@@ -24,17 +25,28 @@ def index():
 
         # Hitung perbedaan jumlah hari
         delta = end_date - start_date
-        future_days = delta.days
+        future_days = delta.days + 1  # Include the end date
+
+        # Baca data dari file CSV
         df = pd.read_csv("data_TA.csv", delimiter=";")
         df['Tanggal'] = df['Tanggal'].str.replace(' ', '')
         df['Tanggal'] = df['Tanggal'].str.replace('/', '-')
+        df['Tanggal'] = pd.to_datetime(df['Tanggal'], format="%d-%m-%Y")
+
+        # Interpolasi dan isi nilai yang hilang
         df.interpolate(method='linear', inplace=True)
         df['Tx'].fillna(method='bfill', inplace=True)
-        tanggal = pd.to_datetime(df['Tanggal'], format="%d-%m-%Y")
+
+        # Mengambil kolom tanggal dan suhu
+        tanggal = df['Tanggal']
         temperature = df['Tx'].astype(float)
+
+        # Normalisasi data suhu
         series = np.array(temperature)
         scaler = MinMaxScaler(feature_range=(0, 1))
         series = scaler.fit_transform(series.reshape(-1, 1))
+
+        # Pembagian data untuk training dan validasi
         time = np.array(tanggal)
         ssplit = 1024
         time_train, time_valid = time[:ssplit], time[ssplit:]
@@ -43,6 +55,8 @@ def index():
             (np.max(x_train) - np.min(x_train))
         x_valid = (x_valid - np.min(series)) / \
             (np.max(series) - np.min(series))
+
+        # Prediksi data
         input_data = x_valid[:30][np.newaxis]
         future_forecast = []
         for _ in range(future_days):
@@ -50,10 +64,12 @@ def index():
             future_forecast.append(prediction[0, 0])
             input_data = np.append(input_data[:, 1:, :], [
                                    [prediction[0, 0]]], axis=1)
+
         future_forecast = np.array(future_forecast)
         forecast_original = scaler.inverse_transform(future_forecast)
-        future_dates = pd.date_range(
-            start=time_valid[-1], periods=future_days+1)[1:]
+
+        # Mengatur tanggal prediksi berdasarkan input tanggal awal
+        future_dates = pd.date_range(start=start_date, periods=future_days)
 
         # Plot hanya data prediksi
         plt.figure(figsize=(15, 10))
@@ -68,6 +84,8 @@ def index():
         plt.xlabel('Date')
         plt.ylabel('Temperature')
         plt.xticks(rotation=45)  # Rotate x-axis labels
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
         plt.title('Forecast')
         plt.legend()
         now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
